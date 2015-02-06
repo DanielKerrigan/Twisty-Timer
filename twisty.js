@@ -1,37 +1,37 @@
+//Dan Kerrigan
+//First created in 2013
 window.onload = function(){
-  var running = false;
-  var interval;
+  var running = false; // is the timer running?
+  var interval;// timing interval
   var decimal = 0;
-  var sec = 0;
-  var min = 0;
-  var cs = 0;
-  var decimalOut = document.getElementById("decimal");
-  var secOut = document.getElementById("sec");
-  var minOut = document.getElementById("min");
-  var colon = document.getElementById("colon");
-  var timesOut = document.getElementById("timeOut");
-  var timesList = document.getElementById("timeList");
-  var clearAll = document.getElementById("clear");
-  var timesDisplay = new Array();
-  var csTimes = new Array();
-  var avAll = 0;
-  var avAllOut = document.getElementById("overallAv");
-  var best = Number.MAX_VALUE;
-  var bestOut = document.getElementById("fastest");
-  var worst = 0;
-  var numSolves = 0;
+  var sec = 0;//seconds
+  var min = 0;//minutes
+  var cs = 0;//centiseconds
+  var decimalOut = document.getElementById("decimal");// decimal output
+  var secOut = document.getElementById("sec");// second output
+  var minOut = document.getElementById("min");// minute output
+  var colon = document.getElementById("colon");// :
+  var timesOut = document.getElementById("timeOut");// time output
+  var timesList = document.getElementById("timeList");// list of times
+  var clearAll = document.getElementById("clear"); // clear timer
+  var timesDisplay = new Array();// array of the times formatted as minutes, seconds, centiseconds
+  var csTimes = new Array();// array of the times in centiseconds
+  var avAll = 0;// average solve time
+  var avAllOut = document.getElementById("overallAv");// average solve time output
+  var best = Number.MAX_VALUE; // best solve time, starts at max integer value
+  var bestOut = document.getElementById("fastest");// best solve time output
+  var numSolves = 0; // number of solves completed
   var total = 0;
-  var numSolvesOut = document.getElementById("solveNum");
-  generateScramble();
+  var numSolvesOut = document.getElementById("solveNum");//number of solves output
+  generateScramble();// generates a 25 move scramble
   function timer(){
     decimal++;
     cs++; //counts time in centiseconds
-    decimalOut.innerHTML = decimal;
-    if(decimal>=100){
+    decimalOut.innerHTML = decimal;// updates the numbers after the decimal point to = decimal
+    if(decimal>=100){// if decimal >= 100, that means 1 second has passed.
       decimal = 0;
       sec++;
-
-      if(sec>59){
+      if(sec>59){// if sec > 59, then 1 minute has passed
         sec = 0;
         min++;
         colon.innerHTML = ":";
@@ -49,21 +49,21 @@ window.onload = function(){
     }
 
   }
+  // onkeyup, either start or stop the timer.
   window.onkeyup = run;
   function run(){
+    // if the timer is not running, then start it
     if(!running){
-      decimal=0;
-      sec=0;
-      min=0;
-      cs=0;
+      decimal = 0, sec = 0, min = 0, cs = 0;
       secOut.innerHTML = "0";
       minOut.innerHTML = "";
       colon.innerHTML = "";
       running = true;
       scramble = "";
       generateScramble();
-      interval = setInterval(timer,10);
+      interval = setInterval(timer,10);// call the function timer every 10 miliseconds
     }
+    // if the timer is running, then stop the timer, record the time, and calculate the new stats.
     else if(running){
       running = false;
       clearInterval(interval);
@@ -73,6 +73,7 @@ window.onload = function(){
       calculateStats();
     }
   }
+  // generates a random 25 move scramble
   function generateScramble(){
     var move;//includes face to turn and how to turn it. Ex. 2F
     var face;//Face to turn. Either R, L, F, B, U, or D
@@ -105,19 +106,18 @@ window.onload = function(){
   clearAll.onclicked = clearTimes;
   clearAll.addEventListener('click', function() {
           clearTimes();
-      });
+  });
+  // resets the timer and statistics
   function clearTimes(){
     numSolves = 0;
     numSolvesOut.innerHTML = "Solves: "+numSolves;
-    /*av5 = 0;
-    av5Out.innerHTML = "3/5: ";
-    av12 = 0;
-    av12Out.innerHTML = "10/12: ";*/
-    best = 99999999999;
+    best = Number.MAX_VALUE;
+    console.log(best);
     bestOut.innerHTML = "Best: ";
-    worst = 0;
     avAll = 0;
     total = 0;
+    secOut.innerHTML = "0";
+    decimalOut.innerHTML = "00";
     avAllOut.innerHTML = "Average: ";
     timesDisplay = [];
     csTimes = [];
@@ -131,15 +131,13 @@ window.onload = function(){
       if(csTimes[x]<best){
         best = csTimes[x];
       }
-      if(csTimes[x]>worst){
-        worst = csTimes[x];
-      }
       total += csTimes[x];
     }
     avAll = total/numSolves;
     avAllOut.innerHTML = "Average: "+formatTime(avAll);
     bestOut.innerHTML = "Best: "+formatTime(best);
   }
+  // formats the time from centiseconds to minutes, seconds, centiseconds
   function formatTime(t){
     //m = minute, s = second, c = centisecond
     var m = 0, s = 0, c = 0, out = "";
